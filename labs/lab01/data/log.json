@@ -1,0 +1,20 @@
+[
+    {
+        "event": "login",
+        "user": "user1",
+        "result": "success",
+        "timestamp": "2026-09-20 12:11:13"
+    },
+    {
+        "event": "login",
+        "user": "user2",
+        "result": "failure",
+        "timestamp": "2026-09-20 12:11:13"
+    },
+    {
+        "event": "login",
+        "user": "user3",
+        "result": "success",
+        "timestamp": "2026-09-20 12:11:13"
+    }
+]
