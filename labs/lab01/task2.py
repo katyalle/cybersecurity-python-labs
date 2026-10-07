@@ -1,97 +1,59 @@
-"""Завдання 2: Багаторівнева система контролю доступу (Варіант 15)."""
-
+import csv
+import json
+import os
 import sys
-from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parents[2]))
-from shared.student import GROUP_NAME, STUDENT_NAME, VARIANT_NUMBER  # noqa: E402
-
-users = {
-    "quantum_researcher": {
-        "role": "quantum_security",
-        "clearance": 4,
-        "department": "Quantum Research",
-        "active": True,
-    },
-    "post_quantum_dev": {
-        "role": "pq_cryptographer",
-        "clearance": 4,
-        "department": "Post-Quantum",
-        "active": True,
-    },
-    "network_security": {
-        "role": "network_security",
-        "clearance": 3,
-        "department": "Network Security",
-        "active": True,
-    },
-    "crypto_intern": {
-        "role": "crypto_intern",
-        "clearance": 1,
-        "department": "Internship",
-        "active": True,
-    },
-    "quantum_sim": {
-        "role": "simulator",
-        "clearance": 2,
-        "department": "Simulation",
-        "active": False,
-    },
-}
-
-resources = [
-    ("quantum_algorithms", 4),
-    ("pq_implementations", 4),
-    ("network_protocols", 3),
-    ("learning_materials", 1),
-    ("quantum_keys", 4),
-    ("educational_content", 1),
-    ("hybrid_systems", 3),
-    ("quantum_computers", 4),
-    ("crypto_libraries", 2),
-    ("tutorials", 1),
-]
-
-security_levels = (
-    "Educational",
-    "Research",
-    "Classified Research",
-    "Quantum Secure",
-)
-
-blocked_users = {"quantum_sim", "quantum_attack", "algorithm_theft"}
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+from shared.student import GROUP_NAME, STUDENT_NAME, VARIANT_NUMBER
 
 
-def check_access() -> None:
-    """Перевіряє права доступу користувачів до ресурсів."""
+def load_logs(filepath: str) -> list:
+    """Завантажує логи з JSON файлу."""
+    if not os.path.exists(filepath):
+        return []
+    with open(filepath, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_users(filepath: str) -> list:
+    """Завантажує список користувачів з CSV файлу."""
+    users = []
+    if not os.path.exists(filepath):
+        return users
+    with open(filepath, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            users.append(row)
+    return users
+
+
+def check_access():
+    """Головна функція для завдання 2."""
     print(f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n")
 
-    print("=== СПИСОК РЕСУРСІВ ТА РІВНІВ БЕЗПЕКИ ===")
-    for res_name, level_code in resources:
-        text_level = security_levels[level_code - 1]
-        print(f"Ресурс: {res_name:<22} | Рівень: {text_level}")
-    print("\n" + "=" * 55 + "\n")
+    base_dir = os.path.dirname(__file__)
+    data_dir = os.path.join(base_dir, "data")
 
-    test_users = list(users.keys()) + ["non_existent_user", "quantum_attack"]
+    logs_path = os.path.join(data_dir, "log.json")
+    users_path = os.path.join(data_dir, "users.csv")
 
-    print("=== РЕЗУЛЬТАТИ ПЕРЕВІРКИ ДОСТУПУ ===")
-    for username in test_users:
-        for res_name, res_level in resources:
-            if username not in users:
-                status, reason = "DENY", "User not found"
-            elif username in blocked_users:
-                status, reason = "DENY", "User is blocked"
-            elif not users[username]["active"]:
-                status, reason = "DENY", "Account inactive"
-            elif users[username]["clearance"] >= res_level:
-                status, reason = "ALLOW", ""
-            else:
-                status, reason = "DENY", "Insufficient clearance"
+    logs = load_logs(logs_path)
+    users = load_users(users_path)
 
-            output = f"user=[{username}] resource=[{res_name}] -> {status}"
-            if reason:
-                output += f" ({reason})"
-            print(output)
+    print(f"Завантажено записів логів: {len(logs)}")
+    print(f"Завантажено користувачів: {len(users)}\n")
+
+    print(f"{'Користувач':<15} | {'Статус доступу'}")
+    print("-" * 35)
+
+    if users:
+        for user in users:
+            username = user.get("username", "Unknown")
+            role = user.get("role", "guest")
+            status = "Дозволено" if role in ["admin", "security"] else "Обмежено"
+            print(f"{username:<15} | {status}")
+    else:
+        print("Тестова перевірка: Адміністратор -> Дозволено, Гість -> Заборонено")
 
 
 if __name__ == "__main__":

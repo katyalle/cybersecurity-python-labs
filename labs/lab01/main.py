@@ -1,4 +1,7 @@
-"""Головний файл для запуску всіх завдань ЛР1."""
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from labs.lab01.task1 import analyze_passwords
 from labs.lab01.task2 import check_access

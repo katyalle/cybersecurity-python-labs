@@ -1,14 +1,13 @@
-"""Завдання 1: Комплексний аналізатор надійності паролів (Варіант 15)."""
-
+import os
 import random
 import string
 import sys
-from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parents[2]))
-from shared.student import GROUP_NAME, STUDENT_NAME, VARIANT_NUMBER  # noqa: E402
+# Додаємо кореневу папку проєкту у шляхи пошуку модулів
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+from shared.student import GROUP_NAME, STUDENT_NAME, VARIANT_NUMBER
 
-passwords = [
+PASSWORDS = [
     "IoT@S3curity",
     "standard",
     "Blockchain@Protect",
@@ -21,14 +20,14 @@ passwords = [
     "common",
 ]
 
-criteria = {
+CRITERIA = {
     "min_length": 8,
     "require_digits": True,
     "require_upper": True,
     "require_special": True,
 }
 
-forbidden_passwords = {
+FORBIDDEN_PASSWORDS = {
     "standard",
     "typical123",
     "normal",
@@ -38,50 +37,47 @@ forbidden_passwords = {
 }
 
 
-def analyze_passwords() -> None:
-    """Оцінює стійкість паролів до компрометації."""
+def evaluate_password(password: str, all_passwords: list) -> str:
+    """Оцінює надійність одного пароля за критеріями варіанта 15."""
+    if password in FORBIDDEN_PASSWORDS or len(password) < CRITERIA["min_length"]:
+        return "Заборонений / Слабкий"
+
+    has_digit = any(c.isdigit() for c in password)
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_special = any(c in string.punctuation for c in password)
+
+    meets_all = has_digit and has_upper and has_lower and has_special
+    is_unique = all_passwords.count(password) == 1
+
+    if meets_all:
+        if len(password) >= CRITERIA["min_length"] + 4 and is_unique:
+            return "Дуже сильний"
+        return "Сильний"
+
+    matches = sum([has_digit, has_upper, has_lower, has_special])
+    if matches >= 2:
+        return "Середній"
+
+    return "Слабкий"
+
+
+def analyze_passwords():
+    """Головна функція для завдання 1."""
     print(f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n")
 
-    working_passwords = passwords.copy()
+    working_passwords = PASSWORDS.copy()
+
+    random.seed(42)
     random_indices = random.sample(range(len(working_passwords)), 3)
     duplicates = [working_passwords[i] for i in random_indices]
     working_passwords.extend(duplicates)
 
-    min_len = criteria["min_length"]
-    special_chars = set(string.punctuation)
-
-    results = []
-
-    for pwd in working_passwords:
-        has_digit = any(char.isdigit() for char in pwd)
-        has_upper = any(char.isupper() for char in pwd)
-        has_lower = any(char.islower() for char in pwd)
-        has_special = any(char in special_chars for char in pwd)
-
-        all_criteria_met = (
-            len(pwd) >= min_len and has_digit and has_upper and has_lower and has_special
-        )
-        is_forbidden = pwd in forbidden_passwords or len(pwd) < min_len
-        is_unique = working_passwords.count(pwd) == 1
-
-        if is_forbidden:
-            category = "Заборонений"
-        elif all_criteria_met:
-            if len(pwd) >= min_len + 4 and is_unique:
-                category = "Дуже сильний"
-            else:
-                category = "Сильний"
-        elif len(pwd) >= min_len and sum([has_digit, has_upper, has_lower, has_special]) >= 2:
-            category = "Середній"
-        else:
-            category = "Слабкий"
-
-        results.append((pwd, category))
-
-    print(f"{'№':<4} | {'Пароль':<22} | {'Категорія надійності'}")
-    print("-" * 52)
-    for idx, (pwd, category) in enumerate(results, 1):
-        print(f"{idx:<4} | {pwd:<22} | {category}")
+    print(f"{'№':<3} | {'Пароль':<22} | {'Оцінка надійності'}")
+    print("-" * 55)
+    for idx, pwd in enumerate(working_passwords, start=1):
+        status = evaluate_password(pwd, working_passwords)
+        print(f"{idx:<3} | {pwd:<22} | {status}")
 
 
 if __name__ == "__main__":
