@@ -1,0 +1,75 @@
+{
+  "source_file": "labs/lab02/data/sudo.log",
+  "total_commands": 12,
+  "root_executions": 10,
+  "unparsed_lines": 0,
+  "high_risk_commands": [
+    {
+      "timestamp": "2026-09-27T09:20:00+03:00",
+      "user": "carol",
+      "tty": "pts/2",
+      "target_user": "root",
+      "command": "/usr/bin/chmod 777 /srv/share",
+      "matched_pattern": "chmod 777"
+    },
+    {
+      "timestamp": "2026-09-27T09:30:00+03:00",
+      "user": "carol",
+      "tty": "pts/2",
+      "target_user": "root",
+      "command": "/usr/bin/nc -lvp 4444",
+      "matched_pattern": "nc"
+    },
+    {
+      "timestamp": "2026-09-27T09:32:00+03:00",
+      "user": "carol",
+      "tty": "pts/2",
+      "target_user": "root",
+      "command": "/usr/bin/nmap -sS 10.0.0.0/24",
+      "matched_pattern": "nmap"
+    },
+    {
+      "timestamp": "2026-09-27T10:00:00+03:00",
+      "user": "dave",
+      "tty": "pts/3",
+      "target_user": "root",
+      "command": "/usr/bin/dd if=/dev/zero of=/tmp/test.img bs=1M count=10",
+      "matched_pattern": "dd"
+    },
+    {
+      "timestamp": "2026-09-27T10:10:00+03:00",
+      "user": "dave",
+      "tty": "pts/3",
+      "target_user": "root",
+      "command": "/usr/bin/vim /etc/shadow",
+      "matched_pattern": "/etc/shadow"
+    },
+    {
+      "timestamp": "2026-09-27T12:00:00+03:00",
+      "user": "carol",
+      "tty": "pts/2",
+      "target_user": "root",
+      "command": "/usr/bin/chmod 777 /tmp/public",
+      "matched_pattern": "chmod 777"
+    },
+    {
+      "timestamp": "2026-09-27T12:05:00+03:00",
+      "user": "carol",
+      "tty": "pts/2",
+      "target_user": "root",
+      "command": "/usr/bin/nc 203.0.113.10 9001",
+      "matched_pattern": "nc"
+    }
+  ],
+  "commands_per_user": {
+    "alice": 3,
+    "bob": 1,
+    "carol": 5,
+    "dave": 2,
+    "eve": 1
+  },
+  "high_risk_per_user": {
+    "carol": 5,
+    "dave": 2
+  }
+}
