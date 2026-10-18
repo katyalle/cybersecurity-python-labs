@@ -5,7 +5,7 @@ import hmac
 import os
 import re
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import ClassVar
 
 ITERATIONS = 100_000  # кількість ітерацій для pbkdf2
@@ -17,7 +17,7 @@ EMAIL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{2,63}@[A-Za-z0-9-]+(\.[A-Za-z0-9-]
 
 def now_utc():
     """Поточний час у UTC."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class User:

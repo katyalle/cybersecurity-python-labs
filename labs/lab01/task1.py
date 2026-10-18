@@ -64,7 +64,9 @@ def evaluate_password(password: str, all_passwords: list) -> str:
 
 def analyze_passwords():
     """Головна функція для завдання 1."""
-    print(f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n")
+    print(
+        f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n"
+    )
 
     working_passwords = PASSWORDS.copy()
 

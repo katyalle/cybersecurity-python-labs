@@ -22,14 +22,15 @@ def load_users(filepath: str) -> list:
         return users
     with open(filepath, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            users.append(row)
+        users = list(reader)
     return users
 
 
 def check_access():
     """Головна функція для завдання 2."""
-    print(f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n")
+    print(
+        f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n"
+    )
 
     base_dir = os.path.dirname(__file__)
     data_dir = os.path.join(base_dir, "data")

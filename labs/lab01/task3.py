@@ -19,7 +19,9 @@ def caesar_cipher(text: str, shift: int = 3) -> str:
 
 def main():
     """Головна функція для завдання 3."""
-    print(f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n")
+    print(
+        f"Студент: {STUDENT_NAME} | Група: {GROUP_NAME} | Варіант: {VARIANT_NUMBER}\n"
+    )
 
     secret_message = "Cybersecurity Lab 01 Completed"
     encrypted = caesar_cipher(secret_message, shift=15)
